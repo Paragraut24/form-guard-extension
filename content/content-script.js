@@ -25,24 +25,31 @@
     document.addEventListener('click', handleLinkClick, true);
   }
   
-  function handleLinkHover(event) {
-    try {
-      const link = event.target.closest('a');
-      if (!link || !link.href) return;
-      
-      const url = link.href;
-      if (checkedLinks.has(url)) return;
-      
-      const quickCheck = performQuickCheck(url);
-      
-      if (quickCheck.suspicious) {
-        addVisualWarning(link, 'suspicious');
-        checkedLinks.add(url);
-      }
-    } catch (error) {
-      console.error('Hover error:', error);
+function handleLinkHover(event) {
+  try {
+    const link = event.target.closest('a');
+    if (!link || !link.href) return;
+    
+    const url = link.href;
+    
+    // Skip if already processed
+    if (link.hasAttribute('data-phishguard-checked')) return;
+    
+    console.log('🔍 Checking link:', url);
+    
+    const quickCheck = performQuickCheck(url);
+    console.log('Quick check result:', quickCheck);
+    
+    if (quickCheck.suspicious) {
+      console.log('⚠️ Suspicious link detected!');
+      addVisualWarning(link, 'suspicious', quickCheck);
+      link.setAttribute('data-phishguard-checked', 'true');
     }
+  } catch (error) {
+    console.error('Hover error:', error);
   }
+}
+
   
   function handleLinkClick(event) {
     try {
@@ -138,20 +145,65 @@
   }
   
   // ============ VISUAL WARNING ============
-  function addVisualWarning(element, level) {
-    try {
-      element.classList.add('phishguard-warning');
-      element.classList.add(`phishguard-${level}`);
-      
-      const tooltip = document.createElement('div');
-      tooltip.className = 'phishguard-tooltip';
-      tooltip.textContent = '⚠️ Suspicious link';
-      element.appendChild(tooltip);
-    } catch (error) {
-      console.error('Warning error:', error);
-    }
+function addVisualWarning(element, level, checkResult) {
+  try {
+    console.log('Adding visual warning to element:', element);
+    
+    // Add warning class
+    element.classList.add('phishguard-warning');
+    element.classList.add(`phishguard-${level}`);
+    
+    // Add inline styles as backup (in case CSS doesn't load)
+    element.style.border = '2px solid #f59e0b';
+    element.style.background = 'rgba(251, 146, 60, 0.15)';
+    element.style.padding = '2px 4px';
+    element.style.borderRadius = '4px';
+    element.style.position = 'relative';
+    
+    // Create tooltip
+    const tooltip = document.createElement('div');
+    tooltip.className = 'phishguard-tooltip';
+    tooltip.style.cssText = `
+      position: absolute;
+      bottom: 100%;
+      left: 0;
+      background: #0f172a;
+      color: #fbbf24;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      white-space: nowrap;
+      z-index: 999999;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      margin-bottom: 5px;
+      pointer-events: none;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      display: none;
+    `;
+    
+    // Tooltip content
+    const reasons = checkResult.reasons.join(', ');
+    tooltip.innerHTML = `⚠️ Suspicious: ${reasons}`;
+    
+    element.appendChild(tooltip);
+    
+    // Show tooltip on hover
+    element.addEventListener('mouseenter', () => {
+      tooltip.style.display = 'block';
+      console.log('Tooltip shown');
+    });
+    
+    element.addEventListener('mouseleave', () => {
+      tooltip.style.display = 'none';
+    });
+    
+    console.log('✅ Visual warning added successfully');
+    
+  } catch (error) {
+    console.error('Warning error:', error);
   }
-  
+}
+
   // ============ BLOCKING MODAL ============
   function showBlockingModal(url, result) {
     try {

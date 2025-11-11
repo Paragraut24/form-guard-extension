@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PhishGuard Hover Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      background: #f5f5f5;
+    }
+    .test-section {
+      background: white;
+      padding: 30px;
+      margin: 20px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1 { color: #333; }
+    h2 { color: #666; margin-top: 30px; }
+    a {
+      display: block;
+      margin: 15px 0;
+      padding: 10px;
+      color: #3b82f6;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+    a:hover {
+      background: #f0f9ff;
+    }
+    .instructions {
+      background: #fef3c7;
+      border-left: 4px solid #f59e0b;
+      padding: 15px;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="test-section">
+    <h1>🛡️ PhishGuard Hover Warning Test Page</h1>
+    
+    <div class="instructions">
+      <strong>Instructions:</strong> Hover over each link below. Suspicious links should get an orange border and show a tooltip.
+    </div>
+    
+    <h2>🚨 Suspicious Links (Should Show Warnings)</h2>
+    
+    <a href="http://192.168.1.1/login" target="_blank">
+      1. Link with IP Address + Login keyword
+    </a>
+    
+    <a href="http://fake-bank.tk" target="_blank">
+      2. Link with Suspicious TLD (.tk)
+    </a>
+    
+    <a href="http://verify-account@phishing.com/update" target="_blank">
+      3. Link with @ Symbol
+    </a>
+    
+    <a href="http://login-verify-confirm-account-security-update-banking.com" target="_blank">
+      4. Long URL with Multiple Keywords
+    </a>
+    
+    <a href="http://example.com/verify?redirect=http://attacker.com&token=abc123%20%21%40%23" target="_blank">
+      5. Link with Encoded Characters
+    </a>
+    
+    <h2>✅ Safe Links (Should NOT Show Warnings)</h2>
+    
+    <a href="https://www.google.com" target="_blank">
+      Google (HTTPS + Legitimate)
+    </a>
+    
+    <a href="https://github.com" target="_blank">
+      GitHub (HTTPS + Legitimate)
+    </a>
+    
+    <a href="https://wikipedia.org" target="_blank">
+      Wikipedia (HTTPS + Legitimate)
+    </a>
+  </div>
+  
+  <div class="test-section">
+    <h2>📊 Test Results</h2>
+    <p>Open DevTools Console (F12) to see detailed logs from PhishGuard.</p>
+    <ul>
+      <li>Check for "🔍 Checking link" messages</li>
+      <li>Check for "⚠️ Suspicious link detected!" messages</li>
+      <li>Check for "✅ Visual warning added successfully" messages</li>
+    </ul>
+  </div>
+</body>
+</html>
