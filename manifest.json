@@ -1,0 +1,46 @@
+{
+  "manifest_version": 3,
+  "name": "PhishGuard - Real-Time Phishing Detector",
+  "version": "1.0.0",
+  "description": "Real-time phishing detection with VirusTotal API integration",
+  "permissions": [
+    "storage",
+    "tabs",
+    "webNavigation",
+    "notifications"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background/service-worker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content/content-script.js"],
+      "css": ["content/warning-styles.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "options_page": "options/options.html",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["blocked.html", "blocked.js", "preview.html", "preview.js", "icons/*.png"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

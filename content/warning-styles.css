@@ -1,0 +1,660 @@
+/* Form Warning Styles - Enhanced */
+.phishguard-form-warning {
+  background: linear-gradient(135deg, #fff3cd 0%, #fff8e1 100%);
+  border: 3px solid #ff9800;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.phishguard-form-warning-content h3 {
+  margin-top: 0;
+  color: #d32f2f;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.phishguard-form-warning-content p {
+  margin: 12px 0;
+  color: #333;
+}
+
+.phishguard-form-warning-content ul {
+  padding-left: 20px;
+  margin: 16px 0;
+  background: white;
+  border-radius: 6px;
+  padding: 16px 16px 16px 36px;
+}
+
+.phishguard-form-warning-content li {
+  margin: 8px 0;
+  color: #555;
+  line-height: 1.5;
+}
+
+.phishguard-field-indicator {
+  background: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border-left: 4px solid #ff5722;
+  margin: 8px 0;
+  font-size: 14px;
+}
+
+.phishguard-form-risk {
+  font-size: 18px;
+  margin: 16px 0;
+  padding: 12px;
+  background: white;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.phishguard-form-risk strong {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.risk-value-high {
+  color: #d32f2f;
+}
+
+.risk-value-medium {
+  color: #ff9800;
+}
+
+.risk-value-low {
+  color: #ff9800;
+}
+
+.phishguard-form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.phishguard-form-actions button {
+  flex: 1;
+  min-width: 200px;
+}
+
+
+/* PhishGuard Warning Styles */
+
+.phishguard-warning {
+  position: relative;
+  border: 2px solid #ff9800 !important;
+  background-color: #fff3cd !important;
+  padding: 2px !important;
+  border-radius: 3px !important;
+}
+
+.phishguard-suspicious {
+  border-color: #ff5722 !important;
+  background-color: #ffebee !important;
+}
+
+.phishguard-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 10000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.phishguard-warning:hover .phishguard-tooltip {
+  opacity: 1;
+}
+
+/* Modal Styles */
+#phishguard-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999999;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.phishguard-modal-content {
+  background: white;
+  border-radius: 12px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.phishguard-modal-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 20px;
+  border-radius: 12px 12px 0 0;
+  text-align: center;
+}
+
+.phishguard-icon {
+  font-size: 48px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.phishguard-modal-header h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.phishguard-modal-body {
+  padding: 24px;
+}
+
+.phishguard-url {
+  background: #f5f5f5;
+  padding: 12px;
+  border-radius: 6px;
+  word-break: break-all;
+  font-family: monospace;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.phishguard-risk-score {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.phishguard-risk-score strong {
+  color: #d32f2f;
+  font-size: 24px;
+}
+
+.phishguard-reason {
+  color: #666;
+  margin-bottom: 16px;
+}
+
+.phishguard-detections {
+  background: #fff3cd;
+  border-left: 4px solid #ff9800;
+  padding: 12px;
+  margin-bottom: 16px;
+  border-radius: 4px;
+}
+
+.phishguard-features h4 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.phishguard-features ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.phishguard-features li {
+  margin-bottom: 6px;
+  color: #555;
+}
+
+.phishguard-modal-actions {
+  display: flex;
+  gap: 10px;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 0 0 12px 12px;
+  flex-wrap: wrap;
+}
+
+.phishguard-btn {
+  flex: 1;
+  min-width: 120px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.phishguard-btn-primary {
+  background: #4CAF50;
+  color: white;
+}
+
+.phishguard-btn-primary:hover {
+  background: #45a049;
+}
+
+.phishguard-btn-secondary {
+  background: #2196F3;
+  color: white;
+}
+
+.phishguard-btn-secondary:hover {
+  background: #0b7dda;
+}
+
+.phishguard-btn-danger {
+  background: #f44336;
+  color: white;
+}
+
+.phishguard-btn-danger:hover {
+  background: #da190b;
+}
+
+/* Safe Preview Styles */
+#phishguard-preview-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 999998;
+  background: white;
+}
+
+.phishguard-preview-banner {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.phishguard-preview-icon {
+  font-size: 24px;
+}
+
+.phishguard-preview-info {
+  flex: 1;
+  font-size: 14px;
+}
+
+.phishguard-preview-controls {
+  display: flex;
+  gap: 10px;
+}
+
+.phishguard-preview-btn {
+  padding: 8px 16px;
+  border: 2px solid white;
+  background: transparent;
+  color: white;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.phishguard-preview-btn:hover {
+  background: white;
+  color: #ff6b6b;
+}
+
+.phishguard-preview-btn-primary {
+  background: white;
+  color: #ff6b6b;
+  border-color: white;
+}
+
+.phishguard-preview-btn-primary:hover {
+  background: #f0f0f0;
+}
+
+.phishguard-preview-btn-danger {
+  background: #d32f2f;
+  border-color: #d32f2f;
+}
+
+.phishguard-preview-btn-danger:hover {
+  background: #b71c1c;
+  border-color: #b71c1c;
+  color: white;
+}
+
+/* Form Warning Styles */
+.phishguard-form-warning {
+  background: #fff3cd;
+  border: 3px solid #ff9800;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.phishguard-form-warning-content h3 {
+  margin-top: 0;
+  color: #d32f2f;
+}
+
+.phishguard-form-warning-content ul {
+  padding-left: 20px;
+}
+
+.phishguard-form-risk {
+  font-size: 16px;
+  margin: 16px 0;
+}
+
+.phishguard-form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.phishguard-analyzing {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 4px 8px;
+  background: #2196F3;
+  color: white;
+  border-radius: 4px;
+  font-size: 12px;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+/* Modern Floating Alert Styles */
+#phishguard-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2147483647;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.phishguard-modal-content {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border-radius: 20px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(59, 130, 246, 0.4);
+  border: 2px solid rgba(59, 130, 246, 0.3);
+  animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.phishguard-modal-header {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  padding: 24px;
+  border-radius: 20px 20px 0 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.phishguard-modal-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+  animation: pulse 3s ease-in-out infinite;
+}
+
+.phishguard-icon {
+  font-size: 64px;
+  display: block;
+  margin-bottom: 16px;
+  filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.5));
+  animation: shake 0.5s ease-in-out;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+.phishguard-modal-header h2 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.phishguard-modal-body {
+  padding: 28px;
+  background: #0f172a;
+}
+
+.phishguard-url {
+  background: #1e293b;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  padding: 16px;
+  border-radius: 12px;
+  word-break: break-all;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  margin-bottom: 20px;
+  color: #60a5fa;
+}
+
+.phishguard-risk-score {
+  background: rgba(239, 68, 68, 0.1);
+  border: 2px solid rgba(239, 68, 68, 0.4);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.phishguard-risk-score strong {
+  color: #f87171;
+  font-size: 36px;
+  font-weight: 700;
+  display: block;
+  margin-top: 8px;
+  text-shadow: 0 0 20px rgba(248, 113, 113, 0.5);
+}
+
+.phishguard-reason {
+  color: #e0e6ed;
+  margin-bottom: 20px;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.phishguard-detections {
+  background: rgba(251, 191, 36, 0.1);
+  border-left: 4px solid #fbbf24;
+  padding: 14px;
+  margin-bottom: 20px;
+  border-radius: 6px;
+  color: #fbbf24;
+  font-weight: 600;
+}
+
+.phishguard-features {
+  background: #1e293b;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.phishguard-features h4 {
+  margin-top: 0;
+  margin-bottom: 14px;
+  color: #e0e6ed;
+  font-size: 16px;
+}
+
+.phishguard-features ul {
+  margin: 0;
+  padding-left: 20px;
+  list-style: none;
+}
+
+.phishguard-features li {
+  margin-bottom: 10px;
+  color: #94a3b8;
+  position: relative;
+  padding-left: 24px;
+  line-height: 1.5;
+}
+
+.phishguard-features li::before {
+  content: '⚠️';
+  position: absolute;
+  left: 0;
+  font-size: 16px;
+}
+
+.phishguard-modal-actions {
+  display: flex;
+  gap: 12px;
+  padding: 20px;
+  background: #1e293b;
+  border-radius: 0 0 20px 20px;
+  flex-wrap: wrap;
+}
+
+.phishguard-btn {
+  flex: 1;
+  min-width: 140px;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.phishguard-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.phishguard-btn:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.phishguard-btn span {
+  position: relative;
+  z-index: 1;
+}
+
+.phishguard-btn-primary {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
+}
+
+.phishguard-btn-primary:hover {
+  box-shadow: 0 6px 20px rgba(34, 197, 94, 0.6);
+  transform: translateY(-2px);
+}
+
+.phishguard-btn-secondary {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+}
+
+.phishguard-btn-secondary:hover {
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+  transform: translateY(-2px);
+}
+
+.phishguard-btn-danger {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+  border: 2px solid rgba(239, 68, 68, 0.5);
+}
+
+.phishguard-btn-danger:hover {
+  background: rgba(239, 68, 68, 0.3);
+  border-color: rgba(239, 68, 68, 0.7);
+  transform: translateY(-2px);
+}
+
+/* Keep existing styles for preview, forms, etc. */
+/* ... (keep all the other existing CSS) ... */

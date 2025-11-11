@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🛡️ PhishGuard - Site Blocked</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #e0e6ed;
+      padding: 20px;
+    }
+    
+    .container {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border: 2px solid #ef4444;
+      border-radius: 24px;
+      padding: 50px;
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(239, 68, 68, 0.3);
+    }
+    
+    .shield-icon {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 30px;
+      background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 60px;
+      box-shadow: 0 10px 40px rgba(59, 130, 246, 0.4);
+    }
+    
+    h1 {
+      font-size: 32px;
+      color: #f87171;
+      margin-bottom: 15px;
+      font-weight: 700;
+    }
+    
+    .subtitle {
+      font-size: 16px;
+      color: #94a3b8;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+    
+    .url-box {
+      background: #0f172a;
+      border: 2px solid #334155;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 25px 0;
+      word-break: break-all;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      color: #60a5fa;
+      text-align: left;
+    }
+    
+    .score-box {
+      background: rgba(239, 68, 68, 0.1);
+      border: 2px solid #ef4444;
+      border-radius: 12px;
+      padding: 25px;
+      margin: 25px 0;
+    }
+    
+    .score-label {
+      font-size: 14px;
+      color: #94a3b8;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .score-value {
+      font-size: 48px;
+      font-weight: 800;
+      color: #f87171;
+      text-shadow: 0 0 20px rgba(248, 113, 113, 0.5);
+    }
+    
+    .warning-text {
+      background: rgba(251, 146, 60, 0.1);
+      border-left: 4px solid #fb923c;
+      padding: 15px 20px;
+      margin: 25px 0;
+      border-radius: 8px;
+      text-align: left;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #fbbf24;
+    }
+    
+    .buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 15px;
+      margin-top: 35px;
+    }
+    
+    button {
+      padding: 15px 25px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 15px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    .btn-back {
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
+    }
+    
+    .btn-back:hover {
+      box-shadow: 0 6px 25px rgba(34, 197, 94, 0.6);
+    }
+    
+    .btn-preview {
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    }
+    
+    .btn-preview:hover {
+      box-shadow: 0 6px 25px rgba(59, 130, 246, 0.6);
+    }
+    
+    .btn-proceed {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 2px solid #ef4444;
+    }
+    
+    .btn-proceed:hover {
+      background: rgba(239, 68, 68, 0.25);
+      border-color: #f87171;
+    }
+    
+    .info-footer {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #334155;
+      font-size: 12px;
+      color: #64748b;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="shield-icon">🛡️</div>
+    
+    <h1>Website Blocked</h1>
+    <p class="subtitle">This website has been blocked for your safety</p>
+    
+    <div class="url-box" id="urlBox">
+      Loading...
+    </div>
+    
+    <div class="score-box">
+      <div class="score-label">Threat Score</div>
+      <div class="score-value" id="scoreValue">100/100</div>
+    </div>
+    
+    <div class="warning-text">
+      ⚠️ <strong>Warning:</strong> PhishGuard has detected this site as potentially dangerous. We recommend going back to safety.
+    </div>
+    
+    <div class="buttons">
+      <button class="btn-back" id="backBtn">
+        ← Go Back to Safety
+      </button>
+      
+      <button class="btn-preview" id="previewBtn">
+        👁️ Safe Preview
+      </button>
+      
+      <button class="btn-proceed" id="proceedBtn">
+        ⚠️ Proceed Anyway
+      </button>
+    </div>
+    
+    <div class="info-footer">
+      🛡️ Protected by PhishGuard • <span id="timestamp"></span>
+    </div>
+  </div>
+  
+  <script src="blocked.js"></script>
+</body>
+</html>

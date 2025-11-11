@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PhishGuard Debug Console</title>
+  <style>
+    body {
+      background: #1a1a1a;
+      color: #0f0;
+      font-family: 'Courier New', monospace;
+      padding: 20px;
+      margin: 0;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    h1 {
+      text-align: center;
+      text-shadow: 0 0 10px #0f0;
+    }
+    .console {
+      background: #000;
+      border: 2px solid #0f0;
+      padding: 15px;
+      margin: 20px 0;
+      max-height: 400px;
+      overflow-y: auto;
+      border-radius: 5px;
+    }
+    .line {
+      margin: 5px 0;
+      padding: 3px 5px;
+    }
+    .log { color: #0f0; }
+    .error { color: #f00; }
+    .warn { color: #ff0; }
+    .input-group {
+      display: flex;
+      gap: 10px;
+      margin: 10px 0;
+      flex-wrap: wrap;
+    }
+    button {
+      padding: 10px 20px;
+      background: #0f0;
+      color: #000;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      font-family: inherit;
+    }
+    button:hover {
+      background: #0a0;
+    }
+    input {
+      padding: 10px;
+      background: #111;
+      color: #0f0;
+      border: 1px solid #0f0;
+      flex: 1;
+      min-width: 300px;
+      font-family: inherit;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🛡️ PhishGuard Debug Console</h1>
+    
+    <div class="console" id="console"></div>
+    
+    <div>
+      <h2>Quick Tests</h2>
+      <div class="input-group">
+        <button onclick="testGoogle()">Test Google Safe Browsing</button>
+        <button onclick="testPhishtank()">Test PhishTank URL</button>
+        <button onclick="checkServiceWorker()">Check Service Worker</button>
+        <button onclick="getServiceWorkerLogs()">Get Service Worker Logs</button>
+      </div>
+      
+      <h2>Manual Test</h2>
+      <div class="input-group">
+        <input type="text" id="urlInput" placeholder="Enter URL to test...">
+        <button onclick="testCustomURL()">Test URL</button>
+      </div>
+      
+      <div class="input-group">
+        <button onclick="checkStats()">Check Stats</button>
+        <button onclick="checkSettings()">Check Settings</button>
+        <button onclick="viewHistory()">View History</button>
+        <button onclick="clearHistory()">Clear History</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const log = document.getElementById('console');
+    
+    function addLog(message, type = 'log') {
+      const line = document.createElement('div');
+      line.className = `line ${type}`;
+      line.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+      log.appendChild(line);
+      log.scrollTop = log.scrollHeight;
+    }
+    
+    async function testGoogle() {
+      addLog('Testing Google Safe Browsing URL...', 'warn');
+      const url = 'http://testsafebrowsing.appspot.com/s/malware.html';
+      const sw = await chrome.runtime.getBackgroundPage();
+      addLog(`Opening: ${url}`, 'log');
+      chrome.tabs.create({ url: url });
+    }
+    
+    async function testCustomURL() {
+      const url = document.getElementById('urlInput').value;
+      if (!url) {
+        addLog('Please enter a URL', 'error');
+        return;
+      }
+      addLog(`Testing custom URL: ${url}`, 'warn');
+      chrome.tabs.create({ url: url });
+    }
+    
+    async function checkServiceWorker() {
+      addLog('Checking service worker status...', 'log');
+      try {
+        const response = await chrome.runtime.sendMessage({ 
+          action: 'getStats' 
+        });
+        addLog(`Service Worker is ACTIVE ✓`, 'log');
+        addLog(`Stats: ${JSON.stringify(response)}`, 'log');
+      } catch (e) {
+        addLog(`Service Worker ERROR: ${e.message}`, 'error');
+      }
+    }
+    
+    async function getServiceWorkerLogs() {
+      addLog('Service Worker Logs:', 'log');
+      addLog('⚠️ Open chrome://extensions → PhishGuard → Service Worker to see detailed logs', 'warn');
+    }
+    
+    async function checkStats() {
+      const data = await chrome.storage.local.get('stats');
+      addLog(`Stats: ${JSON.stringify(data.stats || {})}`, 'log');
+    }
+    
+    async function checkSettings() {
+      const data = await chrome.storage.sync.get(null);
+      addLog(`Settings: ${JSON.stringify(data, null, 2)}`, 'log');
+    }
+    
+    async function viewHistory() {
+      const data = await chrome.storage.local.get('history');
+      const history = data.history || [];
+      addLog(`History (${history.length} entries):`, 'log');
+      history.forEach((item, i) => {
+        addLog(`${i+1}. ${item.domain} - ${item.result.status} (${item.result.score}/100)`, 'log');
+      });
+    }
+    
+    async function clearHistory() {
+      await chrome.storage.local.set({ history: [] });
+      addLog('✓ History cleared', 'log');
+    }
+    
+    addLog('PhishGuard Debug Console Ready', 'log');
+    addLog('Available Commands:', 'log');
+    addLog('- testGoogle() - Test Google Safe Browsing URL', 'log');
+    addLog('- testCustomURL() - Test custom URL', 'log');
+    addLog('- checkServiceWorker() - Check if service worker is running', 'log');
+    addLog('- checkStats() - View statistics', 'log');
+    addLog('- viewHistory() - View scan history', 'log');
+  </script>
+</body>
+</html>

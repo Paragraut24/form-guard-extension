@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhishGuard</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-content">
+        <div class="logo-section">
+          <div class="shield-icon">🛡️</div>
+          <div class="title-group">
+            <h1 class="title">PhishGuard</h1>
+            <p class="subtitle">Real-Time Protection</p>
+          </div>
+        </div>
+        <div class="status-indicator active">
+          <span class="status-dot"></span>
+          <span class="status-text">Active</span>
+        </div>
+      </div>
+    </header>
+    
+    <!-- Stats Grid -->
+    <section class="stats-section">
+      <div class="stats-grid">
+        <div class="stat-card primary">
+          <div class="stat-icon">🔍</div>
+          <div class="stat-content">
+            <div class="stat-value" id="totalScans">0</div>
+            <div class="stat-label">URLs Scanned</div>
+          </div>
+        </div>
+        
+        <div class="stat-card danger">
+          <div class="stat-icon">🚫</div>
+          <div class="stat-content">
+            <div class="stat-value" id="blocked">0</div>
+            <div class="stat-label">Threats Blocked</div>
+          </div>
+        </div>
+        
+        <div class="stat-card warning">
+          <div class="stat-icon">⚠️</div>
+          <div class="stat-content">
+            <div class="stat-value" id="warningsShown">0</div>
+            <div class="stat-label">Warnings Shown</div>
+          </div>
+        </div>
+        
+        <div class="stat-card success">
+          <div class="stat-icon">✅</div>
+          <div class="stat-content">
+            <div class="stat-value" id="safe">0</div>
+            <div class="stat-label">Safe Sites</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Quick Actions -->
+    <section class="actions-section">
+      <h2 class="section-title">Quick Actions</h2>
+      <div class="action-buttons">
+        <button id="checkCurrentPage" class="action-btn primary-btn">
+          <span class="btn-icon">🔍</span>
+          <span class="btn-text">Check Current Page</span>
+        </button>
+        <button id="openSettings" class="action-btn secondary-btn">
+          <span class="btn-icon">⚙️</span>
+          <span class="btn-text">Settings</span>
+        </button>
+      </div>
+    </section>
+    
+    <!-- Current Page Status -->
+    <section class="status-section">
+      <h2 class="section-title">Current Page Status</h2>
+      <div id="pageStatus" class="page-status">
+        <div class="status-icon">🔄</div>
+        <div class="status-message">Extension will auto-scan pages</div>
+        <div class="status-details" style="display: none;"></div>
+      </div>
+    </section>
+    
+    <!-- Navigation Tabs -->
+    <section class="tabs-section">
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="history">
+          <span>📜</span> History
+        </button>
+        <button class="tab-btn" data-tab="whitelist">
+          <span>✓</span> Whitelist
+        </button>
+        <button class="tab-btn" data-tab="blacklist">
+          <span>✗</span> Blacklist
+        </button>
+      </div>
+      
+      <!-- History Tab -->
+      <div class="tab-content active" id="history-tab">
+        <div class="tab-header">
+          <h3>Recent Scans</h3>
+          <button id="clearHistory" class="clear-btn">Clear All</button>
+        </div>
+        <div id="historyList" class="list-container">
+          <div class="empty-state">
+            <div class="empty-icon">📋</div>
+            <p>No scan history yet</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Whitelist Tab -->
+      <div class="tab-content" id="whitelist-tab">
+        <div class="tab-header">
+          <h3>Trusted Domains</h3>
+          <button id="addWhitelist" class="add-btn">+ Add Domain</button>
+        </div>
+        <div id="whitelistList" class="list-container">
+          <div class="empty-state">
+            <div class="empty-icon">✓</div>
+            <p>No whitelisted domains</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Blacklist Tab -->
+      <div class="tab-content" id="blacklist-tab">
+        <div class="tab-header">
+          <h3>Blocked Domains</h3>
+          <button id="addBlacklist" class="add-btn">+ Add Domain</button>
+        </div>
+        <div id="blacklistList" class="list-container">
+          <div class="empty-state">
+            <div class="empty-icon">✗</div>
+            <p>No blacklisted domains</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <p class="footer-text">Protected by PhishGuard</p>
+        <div class="footer-links">
+          <a href="#" id="aboutLink">About</a>
+          <span class="separator">•</span>
+          <a href="#" id="helpLink">Help</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>

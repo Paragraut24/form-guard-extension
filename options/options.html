@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhishGuard Settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🛡️ PhishGuard Settings</h1>
+      <p class="subtitle">Configure your phishing protection preferences</p>
+    </div>
+    
+    <div class="content">
+      <div class="setting-group">
+        <h2>🔑 VirusTotal API Key</h2>
+        <p>Enter your free VirusTotal API key (get one at <a href="https://www.virustotal.com" target="_blank">virustotal.com</a>)</p>
+        <input type="text" id="apiKey" placeholder="Enter your API key...">
+        <div class="info-box">
+          💡 Free tier allows 4 requests per minute and 500 per day
+        </div>
+      </div>
+      
+      <div class="setting-group">
+        <h2>🎚️ Sensitivity Level</h2>
+        <p>Adjust how aggressive the phishing detection should be</p>
+        <select id="sensitivity">
+          <option value="low">Low - Only block confirmed threats</option>
+          <option value="medium" selected>Medium - Warn on suspicious sites (Recommended)</option>
+          <option value="high">High - Maximum protection</option>
+        </select>
+      </div>
+      
+      <div class="setting-group">
+        <h2>🔒 Privacy Mode</h2>
+        <p>Enable to hash URLs before sending to VirusTotal for enhanced privacy</p>
+        <label>
+          <input type="checkbox" id="privacyMode">
+          <span>Hash URLs before sending to VirusTotal</span>
+        </label>
+      </div>
+      
+      <div class="setting-group">
+        <h2>🔔 Notifications</h2>
+        <p>Show desktop notifications when threats are detected</p>
+        <label>
+          <input type="checkbox" id="showNotifications" checked>
+          <span>Enable threat notifications</span>
+        </label>
+      </div>
+      
+      <div class="button-group">
+        <button id="save"><span>💾 Save Settings</span></button>
+        <button id="reset"><span>🔄 Reset to Defaults</span></button>
+      </div>
+      
+      <div id="status"></div>
+    </div>
+  </div>
+  
+  <script src="options.js"></script>
+</body>
+</html>
