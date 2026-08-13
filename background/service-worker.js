@@ -3,10 +3,23 @@
 // Import security modules
 import { SecureStorage } from './secure-storage.js';
 import { MessageSecurity } from './message-security.js';
+import { MLAnalyzer } from './ml-analyzer.js';
+import { URLCache } from './cache-manager.js';
+import { RateLimiter } from './rate-limiter.js';
 
-// Initialize security modules
+// Initialize modules
 const secureStorage = new SecureStorage();
 const messageSecurity = new MessageSecurity();
+const mlAnalyzer = new MLAnalyzer();
+const urlCache = new URLCache();
+const vtRateLimiter = new RateLimiter(4, 60000); // 4 requests per minute (VirusTotal free tier)
+
+// Initialize cache on startup
+urlCache.initialize().then(() => {
+  console.log('✅ URL Cache initialized');
+}).catch(err => {
+  console.error('❌ Cache initialization failed:', err);
+});
 
 const PHISHING_INDICATORS = {
   free_hosting: ['weebly.com', 'wixsite.com', 'wordpress.com', 'blogspot.com', 'tumblr.com', 'square.site'],
@@ -96,18 +109,32 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 // ============ MAIN ANALYSIS FUNCTION ============
 async function analyzeURL(url) {
+  const startTime = performance.now();
+  
   try {
     const settings = await loadSettings();
     console.log('🔍 Analyzing:', url);
     
     const domain = new URL(url).hostname;
     
+    // Check cache first (fast path)
+    const cached = await urlCache.get(url);
+    if (cached && !urlCache.isExpired(cached)) {
+      console.log('✅ Cache hit for:', url);
+      const elapsed = (performance.now() - startTime).toFixed(2);
+      console.log(`⚡ Analysis completed in ${elapsed}ms (cached)`);
+      return cached.result;
+    }
+    
     // Check whitelist
     if (await isWhitelisted(domain, settings.whitelist)) {
       console.log('✅ Whitelisted');
       const result = { status: 'safe', score: 0, reason: 'whitelisted' };
-      await addToHistory(url, result);
-      await updateStats('safe');
+      await Promise.all([
+        addToHistory(url, result),
+        updateStats('safe'),
+        urlCache.set(url, result)
+      ]);
       return result;
     }
     
@@ -115,8 +142,11 @@ async function analyzeURL(url) {
     if (await isBlacklisted(domain, settings.blacklist)) {
       console.log('🚫 Blacklisted');
       const result = { status: 'malicious', score: 100, reason: 'blacklisted' };
-      await addToHistory(url, result);
-      await updateStats('malicious');
+      await Promise.all([
+        addToHistory(url, result),
+        updateStats('malicious'),
+        urlCache.set(url, result)
+      ]);
       return result;
     }
     
@@ -124,59 +154,139 @@ async function analyzeURL(url) {
     if (isTrustedDomain(domain)) {
       console.log('✅ Trusted domain');
       const result = { status: 'safe', score: 0, reason: 'trusted_domain' };
-      await addToHistory(url, result);
-      await updateStats('safe');
+      await Promise.all([
+        addToHistory(url, result),
+        updateStats('safe'),
+        urlCache.set(url, result)
+      ]);
       return result;
     }
     
-    // Check phishing indicators
-    const indicatorScore = checkPhishingIndicators(url, domain);
-    console.log('📊 Phishing indicators score:', indicatorScore);
+    // Run ML analysis and phishing indicators in parallel
+    const [mlResult, indicatorScore] = await Promise.all([
+      mlAnalyzer.analyze(url),
+      Promise.resolve(checkPhishingIndicators(url, domain))
+    ]);
     
-    // If already high risk, mark as malicious
-    if (indicatorScore >= 70) {
+    console.log('📊 Indicator score:', indicatorScore);
+    console.log('🤖 ML score:', mlResult.score, 'confidence:', mlResult.confidence);
+    
+    // Combine ML and indicator scores
+    const combinedLocalScore = Math.round(
+      (indicatorScore * 0.4) + (mlResult.score * 0.6)
+    );
+    
+    // If already high risk, mark as malicious without API call
+    if (combinedLocalScore >= 70) {
       console.log('🚫 HIGH RISK - Marking as malicious');
-      const result = { status: 'malicious', score: indicatorScore, reason: 'phishing_indicators' };
-      await addToHistory(url, result);
-      await updateStats('malicious');
+      const result = { 
+        status: 'malicious', 
+        score: combinedLocalScore, 
+        indicatorScore,
+        mlScore: mlResult.score,
+        mlConfidence: mlResult.confidence,
+        reason: 'local_analysis' 
+      };
+      await Promise.all([
+        addToHistory(url, result),
+        updateStats('malicious'),
+        urlCache.set(url, result)
+      ]);
+      const elapsed = (performance.now() - startTime).toFixed(2);
+      console.log(`⚡ Analysis completed in ${elapsed}ms (local only)`);
       return result;
     }
     
-    // If no API key, return indicator score
+    // If no API key, return combined local score
     if (!settings.apiKey) {
-      console.log('⚠️ No API key - using indicator score');
-      const status = indicatorScore >= 40 ? 'suspicious' : 'safe';
-      const result = { status, score: indicatorScore, reason: 'no_api_key' };
-      await addToHistory(url, result);
-      await updateStats(status);
+      console.log('⚠️ No API key - using local analysis');
+      const status = combinedLocalScore >= 40 ? 'suspicious' : 'safe';
+      const result = { 
+        status, 
+        score: combinedLocalScore, 
+        indicatorScore,
+        mlScore: mlResult.score,
+        mlConfidence: mlResult.confidence,
+        reason: 'no_api_key' 
+      };
+      await Promise.all([
+        addToHistory(url, result),
+        updateStats(status),
+        urlCache.set(url, result)
+      ]);
+      const elapsed = (performance.now() - startTime).toFixed(2);
+      console.log(`⚡ Analysis completed in ${elapsed}ms (no API key)`);
+      return result;
+    }
+    
+    // Check rate limit before calling VirusTotal
+    if (!vtRateLimiter.canMakeRequest()) {
+      console.warn('⚠️ VirusTotal rate limit reached, using local analysis');
+      const waitTime = vtRateLimiter.getWaitTime();
+      console.log(`⏳ Rate limit reset in ${Math.ceil(waitTime / 1000)}s`);
+      
+      const status = combinedLocalScore >= 40 ? 'suspicious' : 'safe';
+      const result = { 
+        status, 
+        score: combinedLocalScore, 
+        indicatorScore,
+        mlScore: mlResult.score,
+        mlConfidence: mlResult.confidence,
+        reason: 'rate_limited',
+        rateLimitReset: waitTime
+      };
+      await Promise.all([
+        addToHistory(url, result),
+        updateStats(status),
+        urlCache.set(url, result)
+      ]);
+      const elapsed = (performance.now() - startTime).toFixed(2);
+      console.log(`⚡ Analysis completed in ${elapsed}ms (rate limited)`);
       return result;
     }
     
     // Call VirusTotal
     console.log('🌐 Calling VirusTotal API...');
+    vtRateLimiter.recordRequest();
     const vtResult = await callVirusTotal(url, settings.apiKey);
     console.log('✅ VirusTotal result:', vtResult);
     
-    // Combine scores
-    const finalScore = Math.round((indicatorScore * 0.3) + (vtResult.score * 0.7));
+    // Ensemble scoring: combine all three sources
+    const finalScore = Math.round(
+      (indicatorScore * 0.2) + 
+      (mlResult.score * 0.3) + 
+      (vtResult.score * 0.5)
+    );
+    
     const status = finalScore >= 70 ? 'malicious' : finalScore >= 40 ? 'suspicious' : 'safe';
     
     const result = {
       status,
       score: finalScore,
       indicatorScore,
+      mlScore: mlResult.score,
+      mlConfidence: mlResult.confidence,
       vtScore: vtResult.score,
       vtDetections: vtResult.detections,
-      reason: 'combined_analysis'
+      vtEngines: vtResult.totalEngines,
+      reason: 'ensemble_analysis'
     };
     
-    await addToHistory(url, result);
-    await updateStats(status);
+    await Promise.all([
+      addToHistory(url, result),
+      updateStats(status),
+      urlCache.set(url, result)
+    ]);
+    
+    const elapsed = (performance.now() - startTime).toFixed(2);
+    console.log(`⚡ Analysis completed in ${elapsed}ms (full ensemble)`);
     
     return result;
     
   } catch (error) {
     console.error('❌ Analysis error:', error);
+    const elapsed = (performance.now() - startTime).toFixed(2);
+    console.log(`⚡ Analysis failed in ${elapsed}ms`);
     return { error: error.message, status: 'error', score: 0 };
   }
 }
@@ -427,6 +537,17 @@ console.log('✅ Service Worker fully loaded');
 setInterval(() => {
   messageSecurity.cleanup();
 }, 5 * 60 * 1000);
+
+// Cache cleanup: remove expired entries every hour
+setInterval(async () => {
+  try {
+    console.log('🧹 Running cache cleanup...');
+    await urlCache.clearExpired();
+    console.log('✅ Cache cleanup completed');
+  } catch (error) {
+    console.error('❌ Cache cleanup failed:', error);
+  }
+}, 60 * 60 * 1000); // Every hour
 
 // Check for API key rotation on startup
 secureStorage.needsKeyRotation().then(needsRotation => {

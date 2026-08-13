@@ -330,12 +330,40 @@ function displayResult(result) {
       details = '';
   }
   
+  // Build detailed score breakdown if ensemble analysis was used
+  let scoreBreakdown = '';
+  if (result.reason === 'ensemble_analysis' && result.indicatorScore !== undefined && result.mlScore !== undefined) {
+    scoreBreakdown = `
+      <div class="status-details" style="display: block; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-color);">
+        <div style="font-weight: 600; margin-bottom: 8px;">Score Breakdown:</div>
+        <div style="font-size: 12px; line-height: 1.6;">
+          <div>🎯 Pattern Analysis: ${result.indicatorScore}/100 (20%)</div>
+          <div>🤖 ML Prediction: ${result.mlScore}/100 ${result.mlConfidence ? `(${Math.round(result.mlConfidence * 100)}% confident)` : ''} (30%)</div>
+          ${result.vtScore !== undefined ? `<div>🌐 VirusTotal: ${result.vtScore}/100 ${result.vtDetections ? `(${result.vtDetections}/${result.vtEngines} engines)` : ''} (50%)</div>` : ''}
+          <div style="margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border-muted); font-weight: 600;">⚖️ Final Score: ${result.score}/100</div>
+        </div>
+      </div>
+    `;
+  } else if (result.reason === 'local_analysis' && result.indicatorScore !== undefined && result.mlScore !== undefined) {
+    scoreBreakdown = `
+      <div class="status-details" style="display: block; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-color);">
+        <div style="font-weight: 600; margin-bottom: 8px;">Local Analysis:</div>
+        <div style="font-size: 12px; line-height: 1.6;">
+          <div>🎯 Pattern Analysis: ${result.indicatorScore}/100</div>
+          <div>🤖 ML Prediction: ${result.mlScore}/100 ${result.mlConfidence ? `(${Math.round(result.mlConfidence * 100)}% confident)` : ''}</div>
+          <div style="margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border-muted); font-weight: 600;">⚖️ Combined Score: ${result.score}/100</div>
+        </div>
+      </div>
+    `;
+  }
+  
   statusDisplay.className = `page-status ${className}`;
   statusDisplay.innerHTML = `
     <div class="status-icon" style="display:flex;align-items:center;justify-content:center;margin-bottom:8px;">${icon}</div>
     <div class="status-message">${message}</div>
     ${details ? `<div class="status-details" style="display: block;">${details}</div>` : ''}
-    ${result.vtDetections ? `<div class="status-details" style="display: block;">${result.vtDetections}/${result.vtEngines} vendors flagged this site</div>` : ''}
+    ${result.vtDetections && !scoreBreakdown ? `<div class="status-details" style="display: block;">${result.vtDetections}/${result.vtEngines} vendors flagged this site</div>` : ''}
+    ${scoreBreakdown}
   `;
 }
 
