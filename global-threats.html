@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Global Threats - PhishGuard</title>
+  <link rel="stylesheet" href="global-threats.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="header-left">
+        <div class="header-icon">🌍</div>
+        <div class="header-text">
+          <h1>Global Threat Feed</h1>
+          <p>Recently reported phishing URLs from security communities worldwide</p>
+        </div>
+      </div>
+      <button class="refresh-btn" id="refreshBtn">
+        <span>🔄</span>
+        <span>Refresh</span>
+      </button>
+    </div>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+      <div class="stat-card">
+        <div class="stat-value" id="totalThreats">0</div>
+        <div class="stat-label">Total Threats</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="activeThreats">0</div>
+        <div class="stat-label">Active Threats</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="lastUpdated">Never</div>
+        <div class="stat-label">Last Updated</div>
+      </div>
+    </div>
+
+    <!-- Threats Container -->
+    <div class="threats-container">
+      <div class="threats-header">
+        <h2>🚨 Active Threats</h2>
+        <div class="filter-buttons">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="banking">Banking</button>
+          <button class="filter-btn" data-filter="payment">Payment</button>
+          <button class="filter-btn" data-filter="social">Social</button>
+        </div>
+      </div>
+
+      <!-- Threats Grid -->
+      <div class="threats-grid" id="threatsGrid">
+        <div class="loading-container">
+          <div class="loading-spinner"></div>
+          <div class="loading-text">Loading global threats...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="global-threats.js"></script>
+</body>
+</html>

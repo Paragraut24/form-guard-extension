@@ -205,9 +205,12 @@ function setupTabs() {
       // Add active class to clicked
       button.classList.add('active');
       document.getElementById(`${tabName}-tab`).classList.add('active');
+      
+      // NO CODE HERE FOR GLOBAL TAB - it opens a new page instead
     });
   });
 }
+
 
 async function checkCurrentPage() {
   const statusDisplay = document.getElementById('pageStatus');
@@ -391,3 +394,33 @@ function escapeHtml(text) {
   div.textContent = text;
   return div.innerHTML;
 }
+// Add to DOMContentLoaded event listener
+
+
+// Update tab switching to load global threats when clicked
+function setupTabs() {
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab + '-tab').classList.add('active');
+      
+      // Load global threats when tab is opened
+      if (btn.dataset.tab === 'global') {
+      }
+    });
+  });
+}
+
+// Load Global Threats from PhishTank
+
+
+// Scan a threat URL
+
+
+// Add threat URL to blacklist
+
+document.getElementById('openGlobalThreats').addEventListener('click', () => {
+  chrome.tabs.create({ url: chrome.runtime.getURL('global-threats.html') });
+});

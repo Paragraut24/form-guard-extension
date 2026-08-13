@@ -25,31 +25,30 @@
     document.addEventListener('click', handleLinkClick, true);
   }
   
-function handleLinkHover(event) {
-  try {
-    const link = event.target.closest('a');
-    if (!link || !link.href) return;
-    
-    const url = link.href;
-    
-    // Skip if already processed
-    if (link.hasAttribute('data-phishguard-checked')) return;
-    
-    console.log('🔍 Checking link:', url);
-    
-    const quickCheck = performQuickCheck(url);
-    console.log('Quick check result:', quickCheck);
-    
-    if (quickCheck.suspicious) {
-      console.log('⚠️ Suspicious link detected!');
-      addVisualWarning(link, 'suspicious', quickCheck);
-      link.setAttribute('data-phishguard-checked', 'true');
+  function handleLinkHover(event) {
+    try {
+      const link = event.target.closest('a');
+      if (!link || !link.href) return;
+      
+      const url = link.href;
+      
+      // Skip if already processed
+      if (link.hasAttribute('data-phishguard-checked')) return;
+      
+      console.log('🔍 Checking link:', url);
+      
+      const quickCheck = performQuickCheck(url);
+      console.log('Quick check result:', quickCheck);
+      
+      if (quickCheck.suspicious) {
+        console.log('⚠️ Suspicious link detected!');
+        addVisualWarning(link, 'suspicious', quickCheck);
+        link.setAttribute('data-phishguard-checked', 'true');
+      }
+    } catch (error) {
+      console.error('Hover error:', error);
     }
-  } catch (error) {
-    console.error('Hover error:', error);
   }
-}
-
   
   function handleLinkClick(event) {
     try {
@@ -145,65 +144,65 @@ function handleLinkHover(event) {
   }
   
   // ============ VISUAL WARNING ============
-function addVisualWarning(element, level, checkResult) {
-  try {
-    console.log('Adding visual warning to element:', element);
-    
-    // Add warning class
-    element.classList.add('phishguard-warning');
-    element.classList.add(`phishguard-${level}`);
-    
-    // Add inline styles as backup (in case CSS doesn't load)
-    element.style.border = '2px solid #f59e0b';
-    element.style.background = 'rgba(251, 146, 60, 0.15)';
-    element.style.padding = '2px 4px';
-    element.style.borderRadius = '4px';
-    element.style.position = 'relative';
-    
-    // Create tooltip
-    const tooltip = document.createElement('div');
-    tooltip.className = 'phishguard-tooltip';
-    tooltip.style.cssText = `
-      position: absolute;
-      bottom: 100%;
-      left: 0;
-      background: #0f172a;
-      color: #fbbf24;
-      padding: 8px 12px;
-      border-radius: 6px;
-      font-size: 12px;
-      white-space: nowrap;
-      z-index: 999999;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-      margin-bottom: 5px;
-      pointer-events: none;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      display: none;
-    `;
-    
-    // Tooltip content
-    const reasons = checkResult.reasons.join(', ');
-    tooltip.innerHTML = `⚠️ Suspicious: ${reasons}`;
-    
-    element.appendChild(tooltip);
-    
-    // Show tooltip on hover
-    element.addEventListener('mouseenter', () => {
-      tooltip.style.display = 'block';
-      console.log('Tooltip shown');
-    });
-    
-    element.addEventListener('mouseleave', () => {
-      tooltip.style.display = 'none';
-    });
-    
-    console.log('✅ Visual warning added successfully');
-    
-  } catch (error) {
-    console.error('Warning error:', error);
+  function addVisualWarning(element, level, checkResult) {
+    try {
+      console.log('Adding visual warning to element:', element);
+      
+      // Add warning class
+      element.classList.add('phishguard-warning');
+      element.classList.add(`phishguard-${level}`);
+      
+      // Add inline styles as backup (in case CSS doesn't load)
+      element.style.border = '2px solid #f59e0b';
+      element.style.background = 'rgba(251, 146, 60, 0.15)';
+      element.style.padding = '2px 4px';
+      element.style.borderRadius = '4px';
+      element.style.position = 'relative';
+      
+      // Create tooltip
+      const tooltip = document.createElement('div');
+      tooltip.className = 'phishguard-tooltip';
+      tooltip.style.cssText = `
+        position: absolute;
+        bottom: 100%;
+        left: 0;
+        background: #0f172a;
+        color: #fbbf24;
+        padding: 8px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        white-space: nowrap;
+        z-index: 999999;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        margin-bottom: 5px;
+        pointer-events: none;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        display: none;
+      `;
+      
+      // Tooltip content
+      const reasons = checkResult.reasons.join(', ');
+      tooltip.innerHTML = `⚠️ Suspicious: ${reasons}`;
+      
+      element.appendChild(tooltip);
+      
+      // Show tooltip on hover
+      element.addEventListener('mouseenter', () => {
+        tooltip.style.display = 'block';
+        console.log('Tooltip shown');
+      });
+      
+      element.addEventListener('mouseleave', () => {
+        tooltip.style.display = 'none';
+      });
+      
+      console.log('✅ Visual warning added successfully');
+      
+    } catch (error) {
+      console.error('Warning error:', error);
+    }
   }
-}
-
+  
   // ============ BLOCKING MODAL ============
   function showBlockingModal(url, result) {
     try {
@@ -426,38 +425,205 @@ function addVisualWarning(element, level, checkResult) {
     }
   }
   
-  // ============ CLIPBOARD MONITORING (SIMPLIFIED) ============
+  // ============ ENHANCED CLIPBOARD MONITORING ============
   function initClipboardMonitoring() {
     let lastCopied = '';
+    let lastCopiedTime = 0;
     
+    // Monitor copy events
     document.addEventListener('copy', () => {
       setTimeout(() => {
-        navigator.clipboard.readText().then(text => {
-          lastCopied = text;
-          console.log('📋 Clipboard: Text copied (PhishGuard monitoring)');
-        }).catch(() => {
-          // Permission denied or not available
-        });
+        try {
+          // Try clipboard API first
+          navigator.clipboard.readText().then(text => {
+            lastCopied = text;
+            lastCopiedTime = Date.now();
+            console.log('📋 Clipboard: Text copied (PhishGuard monitoring)');
+          }).catch(() => {
+            // Fallback to selection
+            const selection = window.getSelection().toString();
+            if (selection) {
+              lastCopied = selection;
+              lastCopiedTime = Date.now();
+              console.log('📋 Clipboard: Text copied (PhishGuard monitoring)');
+            }
+          });
+        } catch (error) {
+          console.error('Copy monitoring error:', error);
+        }
       }, 100);
     });
     
+    // Monitor paste events
     document.addEventListener('paste', (e) => {
-      const pastedText = e.clipboardData.getData('text');
-      if (lastCopied && pastedText && lastCopied !== pastedText) {
-        console.warn('⚠️ CLIPBOARD HIJACK DETECTED!');
-        console.warn('Copied:', lastCopied.substring(0, 50));
-        console.warn('Pasted:', pastedText.substring(0, 50));
-        
-        // Show warning
-        alert(
-          '⚠️ CLIPBOARD HIJACK DETECTED!\n\n' +
-          'The text you copied has been modified!\n\n' +
-          'Original: ' + lastCopied.substring(0, 50) + '...\n' +
-          'Modified: ' + pastedText.substring(0, 50) + '...\n\n' +
-          'This could be a phishing attack!'
-        );
+      // Only check if we have a recent copy (within last 30 seconds)
+      if (!lastCopied || Date.now() - lastCopiedTime > 30000) {
+        return;
+      }
+      
+      // Check what was actually pasted AFTER paste completes
+      setTimeout(() => {
+        try {
+          const target = e.target;
+          let pastedText = '';
+          
+          // Get pasted content from different element types
+          if (target.tagName === 'TEXTAREA' || target.tagName === 'INPUT') {
+            pastedText = target.value;
+          } else if (target.isContentEditable) {
+            pastedText = target.textContent || target.innerText;
+          }
+          
+          // Check for hijacking
+          if (pastedText && 
+              lastCopied && 
+              lastCopied.length > 5 && 
+              !pastedText.includes(lastCopied.trim()) &&
+              pastedText !== lastCopied) {
+            
+            console.error('🚨 CLIPBOARD HIJACK DETECTED!');
+            console.error('User copied:', lastCopied);
+            console.error('Actually pasted:', pastedText);
+            
+            // Show custom warning modal
+            showClipboardHijackAlert(lastCopied, pastedText, target);
+          }
+        } catch (error) {
+          console.error('Paste monitoring error:', error);
+        }
+      }, 150);
+    });
+  }
+  
+  function showClipboardHijackAlert(originalText, hijackedText, targetElement) {
+    // Create modal overlay
+    const overlay = document.createElement('div');
+    overlay.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 999998;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    `;
+    
+    // Create modal
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border: 3px solid #ef4444;
+      border-radius: 16px;
+      padding: 30px;
+      max-width: 600px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
+      animation: slideIn 0.3s ease-out;
+    `;
+    
+    modal.innerHTML = `
+      <style>
+        @keyframes slideIn {
+          from { transform: translateY(-50px); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+      </style>
+      <div style="color: #f87171; font-size: 24px; font-weight: bold; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 32px;">⚠️</span>
+        CLIPBOARD HIJACK DETECTED!
+      </div>
+      
+      <div style="color: #e0e6ed; font-size: 14px; line-height: 1.6; margin-bottom: 20px;">
+        This website attempted to change what you pasted! This is a common phishing technique to steal cryptocurrency addresses or sensitive information.
+      </div>
+      
+      <div style="background: #0a0e27; border: 1px solid #22c55e; border-radius: 8px; padding: 15px; margin-bottom: 10px;">
+        <div style="color: #94a3b8; font-size: 12px; margin-bottom: 5px; font-weight: 600;">✅ YOU COPIED:</div>
+        <div style="color: #4ade80; font-family: 'Courier New', monospace; font-size: 13px; word-break: break-all; max-height: 80px; overflow-y: auto;">
+          ${escapeHtml(originalText.substring(0, 200))}${originalText.length > 200 ? '...' : ''}
+        </div>
+      </div>
+      
+      <div style="background: #0a0e27; border: 1px solid #ef4444; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+        <div style="color: #94a3b8; font-size: 12px; margin-bottom: 5px; font-weight: 600;">🚨 WEBSITE CHANGED IT TO:</div>
+        <div style="color: #f87171; font-family: 'Courier New', monospace; font-size: 13px; word-break: break-all; max-height: 80px; overflow-y: auto;">
+          ${escapeHtml(hijackedText.substring(0, 200))}${hijackedText.length > 200 ? '...' : ''}
+        </div>
+      </div>
+      
+      <div style="background: rgba(251, 191, 36, 0.1); border-left: 3px solid #fbbf24; padding: 12px; margin-bottom: 20px; border-radius: 4px;">
+        <div style="color: #fbbf24; font-size: 13px; line-height: 1.5;">
+          <strong>⚠️ Warning:</strong> Never paste cryptocurrency addresses, passwords, or sensitive data on untrusted websites!
+        </div>
+      </div>
+      
+      <div style="display: flex; gap: 10px;">
+        <button id="phishguard-restore-btn" style="
+          flex: 1;
+          padding: 12px;
+          background: #22c55e;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-size: 14px;
+          font-weight: 600;
+          cursor: pointer;
+        ">
+          ✅ Restore Original Text
+        </button>
+        <button id="phishguard-close-btn" style="
+          flex: 1;
+          padding: 12px;
+          background: #ef4444;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-size: 14px;
+          font-weight: 600;
+          cursor: pointer;
+        ">
+          Close Warning
+        </button>
+      </div>
+    `;
+    
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+    
+    // Restore button
+    document.getElementById('phishguard-restore-btn').addEventListener('click', () => {
+      if (targetElement) {
+        if (targetElement.tagName === 'TEXTAREA' || targetElement.tagName === 'INPUT') {
+          targetElement.value = originalText;
+        } else if (targetElement.isContentEditable) {
+          targetElement.textContent = originalText;
+        }
+      }
+      overlay.remove();
+    });
+    
+    // Close button
+    document.getElementById('phishguard-close-btn').addEventListener('click', () => {
+      overlay.remove();
+    });
+    
+    // Click overlay to close
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) {
+        overlay.remove();
       }
     });
+    
+    // Auto-close after 20 seconds
+    setTimeout(() => {
+      if (overlay.parentElement) {
+        overlay.remove();
+      }
+    }, 20000);
   }
   
   // ============ HELPER FUNCTIONS ============

@@ -88,18 +88,21 @@
     </section>
     
     <!-- Navigation Tabs -->
-    <section class="tabs-section">
-      <div class="tabs">
-        <button class="tab-btn active" data-tab="history">
-          <span>📜</span> History
-        </button>
-        <button class="tab-btn" data-tab="whitelist">
-          <span>✓</span> Whitelist
-        </button>
-        <button class="tab-btn" data-tab="blacklist">
-          <span>✗</span> Blacklist
-        </button>
-      </div>
+    <div class="tabs">
+  <button class="tab-btn active" data-tab="history">
+    <span>📜</span> History
+  </button>
+  <button class="tab-btn" data-tab="whitelist">
+    <span>✓</span> Whitelist
+  </button>
+  <button class="tab-btn" data-tab="blacklist">
+    <span>✗</span> Blacklist
+  </button>
+  <button class="tab-btn" data-tab="global">
+    <span>🌍</span> Global
+  </button>
+</div>
+
       
       <!-- History Tab -->
       <div class="tab-content active" id="history-tab">
@@ -142,6 +145,26 @@
           </div>
         </div>
       </div>
+
+
+<!-- NEW: Global Threats Tab -->
+<!-- Global Tab - Opens full page -->
+<div id="global-tab" class="tab-content">
+  <div class="tab-header">
+    <h3>🌍 Global Threats</h3>
+  </div>
+  <div style="text-align: center; padding: 40px 20px;">
+    <div style="font-size: 48px; margin-bottom: 20px;">🌍</div>
+    <p style="color: #94a3b8; margin-bottom: 20px;">
+      View recently reported phishing URLs from security communities worldwide
+    </p>
+    <button id="openGlobalThreats" class="action-btn primary-btn" style="width: 100%;">
+      <span class="btn-icon">🚀</span>
+      <span class="btn-text">Open Global Threats Dashboard</span>
+    </button>
+  </div>
+</div>
+
     </section>
     
     <!-- Footer -->

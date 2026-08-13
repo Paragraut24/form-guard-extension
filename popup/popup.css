@@ -568,3 +568,102 @@ body {
 .separator {
   color: #334155;
 }
+/* Global Threats Styling */
+.global-info {
+  background: rgba(59, 130, 246, 0.1);
+  border-left: 3px solid #3b82f6;
+  padding: 10px 15px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+}
+
+.threat-item {
+  background: rgba(239, 68, 68, 0.05);
+  border-left: 3px solid #ef4444;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 6px;
+  transition: all 0.3s;
+}
+
+.threat-item:hover {
+  background: rgba(239, 68, 68, 0.1);
+  transform: translateX(2px);
+}
+
+.threat-url {
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  color: #f87171;
+  word-break: break-all;
+  margin: 5px 0;
+}
+
+.threat-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  font-size: 11px;
+  color: #64748b;
+}
+
+.threat-target {
+  background: #1e293b;
+  padding: 2px 8px;
+  border-radius: 4px;
+  color: #fbbf24;
+}
+
+.threat-actions {
+  display: flex;
+  gap: 5px;
+}
+
+.btn-scan {
+  background: #3b82f6;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.btn-scan:hover {
+  background: #2563eb;
+  transform: scale(1.05);
+}
+
+.btn-block {
+  background: #ef4444;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.btn-block:hover {
+  background: #dc2626;
+  transform: scale(1.05);
+}
+
+.loading-threats {
+  text-align: center;
+  padding: 30px;
+  color: #94a3b8;
+}
+
+.loading-spinner-global {
+  width: 30px;
+  height: 30px;
+  border: 3px solid rgba(59, 130, 246, 0.3);
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 15px;
+}
