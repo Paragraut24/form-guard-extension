@@ -1,0 +1,46 @@
+# ============ OS FILES ============
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ============ EDITOR & IDE ============
+.vscode/
+.idea/
+*.suo
+*.user
+*.swp
+*.swo
+*~
+
+# ============ BINARIES & EXECUTABLES ============
+*.exe
+*.dll
+*.so
+*.dylib
+
+# ============ NODE (if ever added) ============
+node_modules/
+npm-debug.log*
+yarn-error.log
+.npm/
+
+# ============ BUILD / DIST OUTPUTS ============
+dist/
+build/
+*.zip
+*.crx
+*.pem
+
+# ============ ENVIRONMENT & SECRETS ============
+.env
+.env.*
+secrets.json
+config.local.js
+
+# ============ TEST / DEBUG FILES ============
+test*.html
+debug.html
+test-*.html
+
+# ============ LOGS ============
+*.log
