@@ -427,8 +427,17 @@
   
   // ============ ENHANCED CLIPBOARD MONITORING ============
   function initClipboardMonitoring() {
-    let lastCopied = '';
-    let lastCopiedTime = 0;
+    // Check if user consented to clipboard monitoring
+    chrome.storage.local.get('clipboard_monitoring_enabled', (data) => {
+      if (!data.clipboard_monitoring_enabled) {
+        console.log('📋 Clipboard monitoring disabled by user preference');
+        return;
+      }
+      
+      console.log('📋 Clipboard monitoring enabled');
+      
+      let lastCopied = '';
+      let lastCopiedTime = 0;
     
     // Monitor copy events
     document.addEventListener('copy', () => {
@@ -493,6 +502,7 @@
         }
       }, 150);
     });
+    }); // End of clipboard consent check
   }
   
   function showClipboardHijackAlert(originalText, hijackedText, targetElement) {

@@ -1,20 +1,25 @@
 {
   "manifest_version": 3,
   "name": "PhishGuard - Real-Time Phishing Detector",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Real-time phishing detection with VirusTotal API integration",
   "permissions": [
     "storage",
     "tabs",
     "webNavigation",
-    "notifications"
+    "notifications",
+    "clipboardRead"
   ],
   "host_permissions": [
     "<all_urls>",
     "https://data.phishtank.com/*"
   ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' https://www.virustotal.com https://openphish.com https://data.phishtank.com;"
+  },
   "background": {
-    "service_worker": "background/service-worker.js"
+    "service_worker": "background/service-worker.js",
+    "type": "module"
   },
   "content_scripts": [
     {

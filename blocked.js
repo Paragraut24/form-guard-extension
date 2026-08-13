@@ -70,7 +70,7 @@ function openSafePreview() {
   console.log('Opening safe preview for:', blockedUrl);
   
   if (!blockedUrl) {
-    alert('⚠️ No URL to preview');
+    alert('No URL to preview');
     return;
   }
   
@@ -87,7 +87,7 @@ function openSafePreview() {
   );
   
   if (!previewWindow) {
-    alert('❌ Could not open preview window.\n\nPlease allow popups for this extension:\n1. Click the popup blocker icon in address bar\n2. Select "Always allow popups from this extension"\n3. Try again');
+    alert('Could not open preview window.\n\nPlease allow popups for this extension:\n1. Click the popup blocker icon in address bar\n2. Select "Always allow popups from this extension"\n3. Try again');
     return;
   }
   
@@ -100,13 +100,13 @@ async function proceedAnyway() {
   console.log('User attempting to proceed to:', blockedUrl);
   
   if (!blockedUrl) {
-    alert('❌ No URL to proceed to');
+    alert('No URL to proceed to');
     return;
   }
   
   // First warning
   const confirmed = confirm(
-    '⚠️ WARNING - DANGEROUS SITE\n\n' +
+    'WARNING - DANGEROUS SITE\n\n' +
     'This site has been identified as MALICIOUS (Score: ' + score + '/100)\n\n' +
     'Proceeding may result in:\n' +
     '• Identity theft\n' +
@@ -123,11 +123,11 @@ async function proceedAnyway() {
   
   // Second warning
   const doubleConfirm = confirm(
-    '🚨 FINAL WARNING\n\n' +
+    'FINAL WARNING\n\n' +
     'You are about to visit:\n' + blockedUrl + '\n\n' +
     'PhishGuard will temporarily whitelist this site.\n' +
     'You will NOT be protected on this visit.\n\n' +
-    'Type YES in your mind and click OK if you are ABSOLUTELY CERTAIN.'
+    'Click OK if you are ABSOLUTELY CERTAIN.'
   );
   
   if (!doubleConfirm) {
@@ -161,6 +161,6 @@ async function proceedAnyway() {
     
   } catch (error) {
     console.error('Error whitelisting domain:', error);
-    alert('❌ Error: Could not whitelist domain. Try again.');
+    alert('Error: Could not whitelist domain. Try again.');
   }
 }

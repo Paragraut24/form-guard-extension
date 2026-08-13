@@ -1,5 +1,13 @@
 // ============ PHISHGUARD SERVICE WORKER ============
 
+// Import security modules
+import { SecureStorage } from './secure-storage.js';
+import { MessageSecurity } from './message-security.js';
+
+// Initialize security modules
+const secureStorage = new SecureStorage();
+const messageSecurity = new MessageSecurity();
+
 const PHISHING_INDICATORS = {
   free_hosting: ['weebly.com', 'wixsite.com', 'wordpress.com', 'blogspot.com', 'tumblr.com', 'square.site'],
   suspicious_tlds: ['.tk', '.ml', '.ga', '.cf', '.gq', '.pw', '.cc', '.top', '.xyz', '.club'],
@@ -14,9 +22,28 @@ const TRUSTED_DOMAINS = [
 
 console.log('✅ PhishGuard Service Worker Started');
 
+// Show consent screen on first install
+chrome.runtime.onInstalled.addListener((details) => {
+  if (details.reason === 'install') {
+    chrome.storage.local.get('consent_given', (data) => {
+      if (!data.consent_given) {
+        chrome.tabs.create({ url: chrome.runtime.getURL('consent.html') });
+      }
+    });
+  }
+});
+
 // ============ MESSAGE HANDLER ============
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log('📨 Message received:', request.action);
+  
+  // Security validation
+  const securityCheck = messageSecurity.validateMessage(request, sender);
+  if (!securityCheck.allowed) {
+    console.warn('❌ Message rejected:', securityCheck.error);
+    sendResponse({ error: securityCheck.error, blocked: true });
+    return true;
+  }
   
   if (request.action === 'analyzeURL') {
     analyzeURL(request.url)
@@ -258,21 +285,40 @@ function isTrustedDomain(domain) {
 }
 
 async function isWhitelisted(domain, whitelist) {
-  return whitelist.some(w => domain.includes(w));
+  // Fixed: Exact domain matching only (no substring bypass)
+  return whitelist.some(w => {
+    const whitelistDomain = w.toLowerCase();
+    const checkDomain = domain.toLowerCase();
+    // Exact match or proper subdomain
+    return checkDomain === whitelistDomain || checkDomain.endsWith('.' + whitelistDomain);
+  });
 }
 
 async function isBlacklisted(domain, blacklist) {
-  return blacklist.some(b => domain.includes(b));
+  // Fixed: Exact domain matching only
+  return blacklist.some(b => {
+    const blacklistDomain = b.toLowerCase();
+    const checkDomain = domain.toLowerCase();
+    return checkDomain === blacklistDomain || checkDomain.endsWith('.' + blacklistDomain);
+  });
 }
 
 async function loadSettings() {
+  // Use secure storage for API key
+  const apiKey = await secureStorage.getApiKey();
+  
   const settings = await chrome.storage.sync.get({
-    apiKey: '',
     whitelist: [],
     blacklist: [],
     showNotifications: true
   });
-  return settings;
+  
+  return {
+    apiKey: apiKey || '',
+    whitelist: settings.whitelist,
+    blacklist: settings.blacklist,
+    showNotifications: settings.showNotifications
+  };
 }
 
 async function addToHistory(url, result) {
@@ -376,3 +422,21 @@ chrome.webNavigation.onCommitted.addListener(async (details) => {
 }, { url: [{ schemes: ['http', 'https'] }] });
 
 console.log('✅ Service Worker fully loaded');
+
+// Cleanup inactive rate limiters every 5 minutes
+setInterval(() => {
+  messageSecurity.cleanup();
+}, 5 * 60 * 1000);
+
+// Check for API key rotation on startup
+secureStorage.needsKeyRotation().then(needsRotation => {
+  if (needsRotation) {
+    console.warn('⚠️ API key rotation recommended (>90 days old)');
+    chrome.notifications.create({
+      type: 'basic',
+      iconUrl: 'icons/icon48.png',
+      title: '🔑 PhishGuard - API Key Rotation',
+      message: 'Your VirusTotal API key is over 90 days old. Consider rotating it for security.'
+    });
+  }
+});

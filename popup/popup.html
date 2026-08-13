@@ -1,185 +1,349 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PhishGuard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="popup.css">
+  <!-- Apply stored theme immediately to avoid flash of wrong theme -->
+  <script>
+    (function () {
+      try {
+        chrome.storage.local.get('phishguard_theme', function (r) {
+          document.documentElement.setAttribute('data-theme', r.phishguard_theme || 'dark');
+        });
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
 </head>
+
 <body>
   <div class="container">
+
     <!-- Header -->
     <header class="header">
       <div class="header-content">
         <div class="logo-section">
-          <div class="shield-icon">🛡️</div>
+          <div class="shield-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              <polyline points="9 12 11 14 15 10" />
+            </svg>
+          </div>
           <div class="title-group">
             <h1 class="title">PhishGuard</h1>
             <p class="subtitle">Real-Time Protection</p>
           </div>
         </div>
-        <div class="status-indicator active">
-          <span class="status-dot"></span>
-          <span class="status-text">Active</span>
+        <div class="header-right">
+          <div class="status-indicator active">
+            <span class="status-dot"></span>
+            <span class="status-text">Active</span>
+          </div>
+          <button class="theme-btn" id="themeToggle" title="Toggle light / dark mode" aria-label="Toggle theme">
+            <!-- Moon icon — shown in dark mode (click to go light) -->
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+            </svg>
+            <!-- Sun icon — shown in light mode (click to go dark) -->
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5" />
+              <line x1="12" y1="1" x2="12" y2="3" />
+              <line x1="12" y1="21" x2="12" y2="23" />
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+              <line x1="1" y1="12" x2="3" y2="12" />
+              <line x1="21" y1="12" x2="23" y2="12" />
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+            </svg>
+          </button>
         </div>
       </div>
     </header>
-    
+
     <!-- Stats Grid -->
     <section class="stats-section">
       <div class="stats-grid">
+
         <div class="stat-card primary">
-          <div class="stat-icon">🔍</div>
+          <div class="stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+          </div>
           <div class="stat-content">
             <div class="stat-value" id="totalScans">0</div>
             <div class="stat-label">URLs Scanned</div>
           </div>
         </div>
-        
+
         <div class="stat-card danger">
-          <div class="stat-icon">🚫</div>
+          <div class="stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              <line x1="9" y1="9" x2="15" y2="15" />
+              <line x1="15" y1="9" x2="9" y2="15" />
+            </svg>
+          </div>
           <div class="stat-content">
             <div class="stat-value" id="blocked">0</div>
             <div class="stat-label">Threats Blocked</div>
           </div>
         </div>
-        
+
         <div class="stat-card warning">
-          <div class="stat-icon">⚠️</div>
+          <div class="stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+          </div>
           <div class="stat-content">
             <div class="stat-value" id="warningsShown">0</div>
             <div class="stat-label">Warnings Shown</div>
           </div>
         </div>
-        
+
         <div class="stat-card success">
-          <div class="stat-icon">✅</div>
+          <div class="stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              <polyline points="9 12 11 14 15 10" />
+            </svg>
+          </div>
           <div class="stat-content">
             <div class="stat-value" id="safe">0</div>
             <div class="stat-label">Safe Sites</div>
           </div>
         </div>
+
       </div>
     </section>
-    
+
     <!-- Quick Actions -->
     <section class="actions-section">
       <h2 class="section-title">Quick Actions</h2>
       <div class="action-buttons">
         <button id="checkCurrentPage" class="action-btn primary-btn">
-          <span class="btn-icon">🔍</span>
-          <span class="btn-text">Check Current Page</span>
+          <span class="btn-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+            </svg>
+          </span>
+          <span class="btn-text">Scan Current Page</span>
         </button>
         <button id="openSettings" class="action-btn secondary-btn">
-          <span class="btn-icon">⚙️</span>
+          <span class="btn-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3" />
+              <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83
+                     2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33
+                     1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09
+                     A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06
+                     a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15
+                     a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09
+                     A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06
+                     a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68
+                     a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09
+                     a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06
+                     a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9
+                     a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09
+                     a1.65 1.65 0 00-1.51 1z" />
+            </svg>
+          </span>
           <span class="btn-text">Settings</span>
         </button>
       </div>
     </section>
-    
+
     <!-- Current Page Status -->
     <section class="status-section">
       <h2 class="section-title">Current Page Status</h2>
       <div id="pageStatus" class="page-status">
-        <div class="status-icon">🔄</div>
+        <div class="status-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+        </div>
         <div class="status-message">Extension will auto-scan pages</div>
-        <div class="status-details" style="display: none;"></div>
+        <div class="status-details" style="display:none"></div>
       </div>
     </section>
-    
-    <!-- Navigation Tabs -->
+
+    <!-- Tabs -->
     <div class="tabs">
-  <button class="tab-btn active" data-tab="history">
-    <span>📜</span> History
-  </button>
-  <button class="tab-btn" data-tab="whitelist">
-    <span>✓</span> Whitelist
-  </button>
-  <button class="tab-btn" data-tab="blacklist">
-    <span>✗</span> Blacklist
-  </button>
-  <button class="tab-btn" data-tab="global">
-    <span>🌍</span> Global
-  </button>
-</div>
+      <button class="tab-btn active" data-tab="history">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <polyline points="12 6 12 12 16 14" />
+        </svg>
+        History
+      </button>
+      <button class="tab-btn" data-tab="whitelist">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
+          <polyline points="22 4 12 14.01 9 11.01" />
+        </svg>
+        Whitelist
+      </button>
+      <button class="tab-btn" data-tab="blacklist">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
+        </svg>
+        Blacklist
+      </button>
+      <button class="tab-btn" data-tab="global">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="2" y1="12" x2="22" y2="12" />
+          <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10
+                 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" />
+        </svg>
+        Global
+      </button>
+    </div>
 
-      
-      <!-- History Tab -->
-      <div class="tab-content active" id="history-tab">
-        <div class="tab-header">
-          <h3>Recent Scans</h3>
-          <button id="clearHistory" class="clear-btn">Clear All</button>
-        </div>
-        <div id="historyList" class="list-container">
-          <div class="empty-state">
-            <div class="empty-icon">📋</div>
-            <p>No scan history yet</p>
+    <!-- History Tab -->
+    <div class="tab-content active" id="history-tab">
+      <div class="tab-header">
+        <h3>Recent Scans</h3>
+        <button id="clearHistory" class="clear-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" width="12" height="12">
+            <polyline points="3 6 5 6 21 6" />
+            <path d="M19 6l-1 14H6L5 6" />
+            <path d="M10 11v6M14 11v6" />
+            <path d="M9 6V4h6v2" />
+          </svg>
+          Clear All
+        </button>
+      </div>
+      <div id="historyList" class="list-container">
+        <div class="empty-state">
+          <div class="empty-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+              stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
           </div>
+          <p>No scan history yet</p>
         </div>
       </div>
-      
-      <!-- Whitelist Tab -->
-      <div class="tab-content" id="whitelist-tab">
-        <div class="tab-header">
-          <h3>Trusted Domains</h3>
-          <button id="addWhitelist" class="add-btn">+ Add Domain</button>
-        </div>
-        <div id="whitelistList" class="list-container">
-          <div class="empty-state">
-            <div class="empty-icon">✓</div>
-            <p>No whitelisted domains</p>
+    </div>
+
+    <!-- Whitelist Tab -->
+    <div class="tab-content" id="whitelist-tab">
+      <div class="tab-header">
+        <h3>Trusted Domains</h3>
+        <button id="addWhitelist" class="add-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" width="12" height="12">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+          Add Domain
+        </button>
+      </div>
+      <div id="whitelistList" class="list-container">
+        <div class="empty-state">
+          <div class="empty-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              <polyline points="9 12 11 14 15 10" />
+            </svg>
           </div>
+          <p>No whitelisted domains</p>
         </div>
       </div>
-      
-      <!-- Blacklist Tab -->
-      <div class="tab-content" id="blacklist-tab">
-        <div class="tab-header">
-          <h3>Blocked Domains</h3>
-          <button id="addBlacklist" class="add-btn">+ Add Domain</button>
-        </div>
-        <div id="blacklistList" class="list-container">
-          <div class="empty-state">
-            <div class="empty-icon">✗</div>
-            <p>No blacklisted domains</p>
+    </div>
+
+    <!-- Blacklist Tab -->
+    <div class="tab-content" id="blacklist-tab">
+      <div class="tab-header">
+        <h3>Blocked Domains</h3>
+        <button id="addBlacklist" class="add-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" width="12" height="12">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+          Add Domain
+        </button>
+      </div>
+      <div id="blacklistList" class="list-container">
+        <div class="empty-state">
+          <div class="empty-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+              stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
+            </svg>
           </div>
+          <p>No blacklisted domains</p>
         </div>
       </div>
+    </div>
 
-
-<!-- NEW: Global Threats Tab -->
-<!-- Global Tab - Opens full page -->
-<div id="global-tab" class="tab-content">
-  <div class="tab-header">
-    <h3>🌍 Global Threats</h3>
-  </div>
-  <div style="text-align: center; padding: 40px 20px;">
-    <div style="font-size: 48px; margin-bottom: 20px;">🌍</div>
-    <p style="color: #94a3b8; margin-bottom: 20px;">
-      View recently reported phishing URLs from security communities worldwide
-    </p>
-    <button id="openGlobalThreats" class="action-btn primary-btn" style="width: 100%;">
-      <span class="btn-icon">🚀</span>
-      <span class="btn-text">Open Global Threats Dashboard</span>
-    </button>
-  </div>
-</div>
-
-    </section>
-    
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="footer-content">
-        <p class="footer-text">Protected by PhishGuard</p>
-        <div class="footer-links">
-          <a href="#" id="aboutLink">About</a>
-          <span class="separator">•</span>
-          <a href="#" id="helpLink">Help</a>
-        </div>
+    <!-- Global Tab -->
+    <div id="global-tab" class="tab-content">
+      <div class="tab-header">
+        <h3>Global Threats</h3>
       </div>
-    </footer>
+      <div style="text-align:center; padding:32px 20px;">
+        <div class="global-tab-icon">
+          <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="2" y1="12" x2="22" y2="12" />
+            <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10
+                   15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" />
+          </svg>
+        </div>
+        <p class="global-tab-desc">
+          View recently reported phishing URLs from security communities worldwide
+        </p>
+        <button id="openGlobalThreats" class="action-btn primary-btn" style="width:100%; margin-top:0;">
+          <span class="btn-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <polyline points="22 12 16 12 14 15 10 15 8 12 2 12" />
+              <path
+                d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z" />
+            </svg>
+          </span>
+          <span class="btn-text">Open Global Threat Feed</span>
+        </button>
+      </div>
+    </div>
+
   </div>
-  
+  <script src="../theme.js"></script>
   <script src="popup.js"></script>
 </body>
+
 </html>

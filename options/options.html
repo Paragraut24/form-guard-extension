@@ -1,65 +1,183 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PhishGuard Settings</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="options.css">
+  <!-- Apply stored theme immediately to prevent flash -->
+  <script>
+    (function () {
+      try {
+        chrome.storage.local.get('phishguard_theme', function (r) {
+          document.documentElement.setAttribute('data-theme', r.phishguard_theme || 'dark');
+        });
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
 </head>
+
 <body>
   <div class="container">
     <div class="header">
-      <h1>🛡️ PhishGuard Settings</h1>
-      <p class="subtitle">Configure your phishing protection preferences</p>
-    </div>
-    
-    <div class="content">
-      <div class="setting-group">
-        <h2>🔑 VirusTotal API Key</h2>
-        <p>Enter your free VirusTotal API key (get one at <a href="https://www.virustotal.com" target="_blank">virustotal.com</a>)</p>
-        <input type="text" id="apiKey" placeholder="Enter your API key...">
-        <div class="info-box">
-          💡 Free tier allows 4 requests per minute and 500 per day
+      <div class="header-left">
+        <div class="header-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            <polyline points="9 12 11 14 15 10" />
+          </svg>
+        </div>
+        <div>
+          <h1>PhishGuard Settings</h1>
+          <p class="subtitle">Configure your phishing protection preferences</p>
         </div>
       </div>
-      
+
+      <!-- Theme Toggle -->
+      <button class="theme-btn" id="themeToggle" title="Toggle light / dark mode" aria-label="Toggle theme">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+        </svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5" />
+          <line x1="12" y1="1" x2="12" y2="3" />
+          <line x1="12" y1="21" x2="12" y2="23" />
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+          <line x1="1" y1="12" x2="3" y2="12" />
+          <line x1="21" y1="12" x2="23" y2="12" />
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="content settings-form">
       <div class="setting-group">
-        <h2>🎚️ Sensitivity Level</h2>
+        <h2>
+          <span class="setting-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+              <path d="M7 11V7a5 5 0 0110 0v4" />
+            </svg>
+          </span>
+          VirusTotal API Key
+        </h2>
+        <p>Enter your free VirusTotal API key (get one at <a href="https://www.virustotal.com"
+            target="_blank">virustotal.com</a>)</p>
+        <input type="text" id="apiKey" placeholder="Enter your API key...">
+        <div class="info-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" class="info-icon">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+          Free tier allows 4 requests per minute and 500 per day
+        </div>
+      </div>
+
+      <div class="setting-group">
+        <h2>
+          <span class="setting-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+            </svg>
+          </span>
+          Sensitivity Level
+        </h2>
         <p>Adjust how aggressive the phishing detection should be</p>
         <select id="sensitivity">
-          <option value="low">Low - Only block confirmed threats</option>
-          <option value="medium" selected>Medium - Warn on suspicious sites (Recommended)</option>
-          <option value="high">High - Maximum protection</option>
+          <option value="low">Low — Only block confirmed threats</option>
+          <option value="medium" selected>Medium — Warn on suspicious sites (Recommended)</option>
+          <option value="high">High — Maximum protection</option>
         </select>
       </div>
-      
+
       <div class="setting-group">
-        <h2>🔒 Privacy Mode</h2>
+        <h2>
+          <span class="setting-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="2" y1="12" x2="22" y2="12" />
+              <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10
+                       15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" />
+            </svg>
+          </span>
+          Privacy Mode
+        </h2>
         <p>Enable to hash URLs before sending to VirusTotal for enhanced privacy</p>
         <label>
           <input type="checkbox" id="privacyMode">
           <span>Hash URLs before sending to VirusTotal</span>
         </label>
       </div>
-      
+
       <div class="setting-group">
-        <h2>🔔 Notifications</h2>
+        <h2>
+          <span class="setting-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
+              <path d="M13.73 21a2 2 0 01-3.46 0" />
+            </svg>
+          </span>
+          Notifications
+        </h2>
         <p>Show desktop notifications when threats are detected</p>
         <label>
           <input type="checkbox" id="showNotifications" checked>
           <span>Enable threat notifications</span>
         </label>
       </div>
-      
+
       <div class="button-group">
-        <button id="save"><span>💾 Save Settings</span></button>
-        <button id="reset"><span>🔄 Reset to Defaults</span></button>
+        <button id="save">
+          <span class="btn-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z" />
+              <polyline points="17 21 17 13 7 13 7 21" />
+              <polyline points="7 3 7 8 15 8" />
+            </svg>
+          </span>
+          <span>Save Settings</span>
+        </button>
+        <button id="reset">
+          <span class="btn-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <polyline points="23 4 23 10 17 10" />
+              <polyline points="1 20 1 14 7 14" />
+              <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" />
+            </svg>
+          </span>
+          <span>Reset to Defaults</span>
+        </button>
       </div>
-      
+
       <div id="status"></div>
     </div>
   </div>
-  
-  <script src="options.js"></script>
+
+  <script src="../theme.js"></script>
+  <script>
+    // Apply theme on load and wire toggle
+    ThemeManager.loadAndApply();
+    document.getElementById('themeToggle').addEventListener('click', () => ThemeManager.toggle());
+  </script>
+  <script type="module" src="options.js"></script>
 </body>
+
 </html>

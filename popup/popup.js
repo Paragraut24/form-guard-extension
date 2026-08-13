@@ -2,6 +2,15 @@
 let currentStats = {};
 
 document.addEventListener('DOMContentLoaded', async () => {
+  // Load & apply persisted theme first
+  await ThemeManager.loadAndApply();
+
+  // Wire up theme toggle button
+  const themeBtn = document.getElementById('themeToggle');
+  if (themeBtn) {
+    themeBtn.addEventListener('click', () => ThemeManager.toggle());
+  }
+
   await loadStats();
   await loadHistory();
   await loadLists();
@@ -52,7 +61,16 @@ function displayHistory(history) {
   if (!history || history.length === 0) {
     container.innerHTML = `
       <div class="empty-state">
-        <div class="empty-icon">📋</div>
+        <div class="empty-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10 9 9 9 8 9"/>
+          </svg>
+        </div>
         <p>No scan history yet</p>
       </div>
     `;
@@ -122,7 +140,13 @@ function displayWhitelist(whitelist) {
   if (!whitelist || whitelist.length === 0) {
     container.innerHTML = `
       <div class="empty-state">
-        <div class="empty-icon">✓</div>
+        <div class="empty-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <polyline points="9 12 11 14 15 10"/>
+          </svg>
+        </div>
         <p>No whitelisted domains</p>
       </div>
     `;
@@ -155,7 +179,13 @@ function displayBlacklist(blacklist) {
   if (!blacklist || blacklist.length === 0) {
     container.innerHTML = `
       <div class="empty-state">
-        <div class="empty-icon">✗</div>
+        <div class="empty-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+          </svg>
+        </div>
         <p>No blacklisted domains</p>
       </div>
     `;
@@ -216,7 +246,14 @@ async function checkCurrentPage() {
   const statusDisplay = document.getElementById('pageStatus');
   statusDisplay.className = 'page-status';
   statusDisplay.innerHTML = `
-    <div class="status-icon">🔄</div>
+    <div class="status-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+           stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="23 4 23 10 17 10"/>
+        <polyline points="1 20 1 14 7 14"/>
+        <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+      </svg>
+    </div>
     <div class="status-message">Analyzing...</div>
   `;
   
@@ -225,7 +262,14 @@ async function checkCurrentPage() {
     
     if (!tab || !tab.url || tab.url.startsWith('chrome://')) {
       statusDisplay.innerHTML = `
-        <div class="status-icon">❌</div>
+        <div class="status-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="15" y1="9" x2="9" y2="15"/>
+            <line x1="9" y1="9" x2="15" y2="15"/>
+          </svg>
+        </div>
         <div class="status-message">Cannot analyze this page</div>
       `;
       return;
@@ -243,7 +287,14 @@ async function checkCurrentPage() {
   } catch (error) {
     console.error('Check error:', error);
     statusDisplay.innerHTML = `
-      <div class="status-icon">⚠️</div>
+      <div class="status-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="1.5"
+             stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/>
+          <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+      </div>
       <div class="status-message">Error analyzing page</div>
     `;
   }
@@ -255,25 +306,25 @@ function displayResult(result) {
   
   switch (result.status) {
     case 'safe':
-      icon = '✅';
+      icon = `<svg viewBox="0 0 24 24" fill="none" stroke="#2ea043" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>`;
       message = 'This page is safe';
       className = 'status-safe';
       details = `Risk Score: ${result.score}/100`;
       break;
     case 'suspicious':
-      icon = '⚠️';
+      icon = `<svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`;
       message = 'This page is suspicious';
       className = 'status-warning';
       details = `Risk Score: ${result.score}/100`;
       break;
     case 'malicious':
-      icon = '🚫';
+      icon = `<svg viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>`;
       message = 'This page is dangerous';
       className = 'status-danger';
       details = `Risk Score: ${result.score}/100`;
       break;
     default:
-      icon = '❓';
+      icon = `<svg viewBox="0 0 24 24" fill="none" stroke="#6e7681" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`;
       message = 'Unknown status';
       className = '';
       details = '';
@@ -281,7 +332,7 @@ function displayResult(result) {
   
   statusDisplay.className = `page-status ${className}`;
   statusDisplay.innerHTML = `
-    <div class="status-icon">${icon}</div>
+    <div class="status-icon" style="display:flex;align-items:center;justify-content:center;margin-bottom:8px;">${icon}</div>
     <div class="status-message">${message}</div>
     ${details ? `<div class="status-details" style="display: block;">${details}</div>` : ''}
     ${result.vtDetections ? `<div class="status-details" style="display: block;">${result.vtDetections}/${result.vtEngines} vendors flagged this site</div>` : ''}

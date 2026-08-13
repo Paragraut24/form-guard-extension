@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhishGuard - Privacy Consent</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .consent-box {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 600px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .header-icon {
+      width: 64px;
+      height: 64px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 15px;
+    }
+
+    .header-icon svg {
+      width: 36px;
+      height: 36px;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      opacity: 0.9;
+      font-size: 14px;
+    }
+
+    .content {
+      padding: 30px;
+    }
+
+    .feature {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      background: #667eea;
+      border-radius: 8px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+
+    .feature-icon svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .feature-content h3 {
+      font-size: 16px;
+      margin-bottom: 5px;
+      color: #333;
+    }
+
+    .feature-content p {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    .consent-options {
+      margin: 25px 0;
+      padding: 20px;
+      background: #e3f2fd;
+      border-radius: 8px;
+      border-left: 4px solid #2196f3;
+    }
+
+    .consent-options h3 {
+      font-size: 15px;
+      margin-bottom: 12px;
+      color: #1976d2;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: start;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .checkbox-item input[type="checkbox"] {
+      margin-top: 2px;
+      width: 18px;
+      height: 18px;
+    }
+
+    .checkbox-item label {
+      font-size: 14px;
+      color: #333;
+      cursor: pointer;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 25px;
+    }
+
+    button {
+      flex: 1;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-accept {
+      background: #667eea;
+      color: white;
+    }
+
+    .btn-accept:hover {
+      background: #5568d3;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-decline {
+      background: #e0e0e0;
+      color: #666;
+    }
+
+    .btn-decline:hover {
+      background: #d0d0d0;
+    }
+
+    .privacy-link {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 13px;
+    }
+
+    .privacy-link a {
+      color: #667eea;
+      text-decoration: none;
+    }
+
+    .privacy-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="consent-box">
+    <div class="header">
+      <div class="header-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <polyline points="9 12 11 14 15 10"/>
+        </svg>
+      </div>
+      <h1>Welcome to PhishGuard</h1>
+      <p class="subtitle">Real-time phishing protection for safer browsing</p>
+    </div>
+
+    <div class="content">
+      <div class="feature">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+        </div>
+        <div class="feature-content">
+          <h3>Privacy First</h3>
+          <p>PhishGuard requires certain permissions to protect you. Your privacy is our priority — all data stays on your device.</p>
+        </div>
+      </div>
+
+      <div class="consent-options">
+        <h3>📋 Clipboard Protection (Optional)</h3>
+        <div class="checkbox-item">
+          <input type="checkbox" id="clipboardConsent" checked>
+          <label for="clipboardConsent">
+            <strong>Enable clipboard hijack detection</strong><br>
+            <span style="color: #666; font-size: 13px;">
+              PhishGuard can monitor clipboard to detect when malicious sites try to swap what you paste 
+              (common in crypto address theft). Your clipboard data never leaves your device.
+            </span>
+          </label>
+        </div>
+      </div>
+
+      <div class="buttons">
+        <button class="btn-decline" id="declineBtn">Decline & Continue</button>
+        <button class="btn-accept" id="acceptBtn">Accept & Start</button>
+      </div>
+
+      <div class="privacy-link">
+        <a href="privacy-policy.html" target="_blank">Read our Privacy Policy</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('acceptBtn').addEventListener('click', () => {
+      const clipboardConsent = document.getElementById('clipboardConsent').checked;
+      
+      chrome.storage.local.set({
+        consent_given: true,
+        clipboard_monitoring_enabled: clipboardConsent,
+        consent_date: Date.now()
+      }, () => {
+        window.close();
+      });
+    });
+
+    document.getElementById('declineBtn').addEventListener('click', () => {
+      chrome.storage.local.set({
+        consent_given: true,
+        clipboard_monitoring_enabled: false,
+        consent_date: Date.now()
+      }, () => {
+        window.close();
+      });
+    });
+
+    // Check if already consented (shouldn't happen, but just in case)
+    chrome.storage.local.get('consent_given', (data) => {
+      if (data.consent_given) {
+        window.close();
+      }
+    });
+  </script>
+</body>
+</html>

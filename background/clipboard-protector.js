@@ -3,7 +3,7 @@ export class ClipboardProtector {
     this.clipboardHistory = [];
     this.maxHistory = 50;
   }
-  
+
   // Start monitoring clipboard
   startMonitoring() {
     console.log('📋 Clipboard protection enabled');
